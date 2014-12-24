@@ -237,6 +237,11 @@ void help()
 void kullanici_ekle()
 {
     system("cls");
+    first_memur();
+    first_kullanici();
+    user_information();
+    Sleep(3000);
+    system("cls");
     struct kullanici users;
     FILE *add_user;
     fopen_s(&add_user, "user_information.dat", "a");
@@ -266,9 +271,9 @@ void kullanici_ekle()
         gets_s(users.sifre);
         _flushall();
         do{
-        printf("Yetki turunu giriniz(Admin = a,Memur = m, Kullanici = k) : ");
-        users.yetki_turu = getchar();
-        _flushall();
+            printf("Yetki turunu giriniz(Admin = a,Memur = m, Kullanici = k) : ");
+            users.yetki_turu = getchar();
+            _flushall();
         } while (users.yetki_turu != 97 && users.yetki_turu != 107 && users.yetki_turu != 109);
         printf("Il : ");
         gets_s(users.address.il);
@@ -292,9 +297,9 @@ void kullanici_ekle()
         gets_s(users.address.no);
         _flushall();
         fprintf(add_user, "%s\t%s\t%s\t%s\t%s\t%s\t%c\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", users.ad, users.soyad, users.tckimlik, users.telefon, users.eposta, users.kullanici_adi,
-        users.yetki_turu, users.address.il, users.address.ilce, users.address.cadde, users.address.mahalle, users.address.sokak, users.address.apartman, users.address.no);
-        if (users.yetki_turu == 'a') 
-        { 
+            users.yetki_turu, users.address.il, users.address.ilce, users.address.cadde, users.address.mahalle, users.address.sokak, users.address.apartman, users.address.no);
+        if (users.yetki_turu == 'a')
+        {
             fopen_s(&add_user, "adminsifre.dat", "a");
             fprintf(add_user, "\n%s\n%s", users.kullanici_adi, users.sifre);
         }
@@ -308,7 +313,7 @@ void kullanici_ekle()
             fopen_s(&add_user, "kullanicisifre.dat", "a");
             fprintf(add_user, "\n%s\n%s", users.kullanici_adi, users.sifre);
         }
-        }
+    }
     fclose(add_user);
     }
 void kullanici_sil()

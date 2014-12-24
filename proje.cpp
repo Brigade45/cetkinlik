@@ -38,6 +38,9 @@ int default_check();
 int admin_check();
 int kullanici_check();
 int memur_check();
+int first_memur();
+int first_kullanici();
+int user_information();
 struct adres
 {
     char il[15];
@@ -404,7 +407,6 @@ int default_check()      // default_check tamamlandi.
     fclose(firstadmin);
     return 0;
 }
-
 int admin_check(){
     int lines_allocated = 1000;
     int max_line_len = 150;
@@ -601,5 +603,44 @@ int memur_check(){
             break;
     }
     fclose(memur_check);
+    return 0;
+}
+int first_memur()
+{
+    FILE *firstmemur;  /* dosya göstericisi */
+    fopen_s(&firstmemur, "memursifre.dat", "r");
+    if (firstmemur == NULL)
+    {
+        printf("Programda tanimli memursifre.dat dosyasi bulunamadi.");
+        printf("\nDosya olusturuldu.");
+        fopen_s(&firstmemur, "memursifre.dat", "w");
+    }
+    fclose(firstmemur);
+    return 0;
+}
+int first_kullanici()
+{
+    FILE *firstkullanici;  /* dosya göstericisi */
+    fopen_s(&firstkullanici, "kullanicisifre.dat", "r");
+    if (firstkullanici == NULL)
+    {
+        printf("\nProgramda tanimli kullanicisifre.dat dosyasi bulunamadi.");
+        printf("\nDosya olusturuldu.");
+        fopen_s(&firstkullanici, "kullanicisifre.dat", "w");
+    }
+    fclose(firstkullanici);
+    return 0;
+}
+int user_information()
+{
+    FILE *userinformation;  /* dosya göstericisi */
+    fopen_s(&userinformation, "user_information.dat", "r");
+    if (userinformation == NULL)
+    {
+        printf("\nProgramda tanimli user_information.dat dosyasi bulunamadi.");
+        printf("\nDosya olusturuldu.");
+        fopen_s(&userinformation, "user_information.dat", "w");
+    }
+    fclose(userinformation);
     return 0;
 }

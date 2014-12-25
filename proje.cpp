@@ -68,7 +68,7 @@ struct siginmaci{
     //int siginmaci_no;
     char ad[20];
     char soyad[20];
-    char dogum_tarihi[4];
+    char dogum_tarihi[5];
     char dogum_yeri[20];
     char cinsiyet;
     char uyruk[20];
@@ -77,7 +77,7 @@ struct siginmaci{
     char telefon[20];
     struct adres address;
     char geldigi_sehir[20];
-    char gelis_tarihi[10];
+    char gelis_tarihi[11];
     char eposta[20];
 };
 int main()
@@ -97,7 +97,27 @@ int login()
         gets_s(id);
         _flushall();
         printf("\nSifre =");
-        gets_s(pass);
+        //gets_s(pass);
+        int i = 0;
+        int p;
+        while ((p = _getch()) != 13)
+        {
+            pass[i] = p;
+            if (p != 8)
+                printf("*");
+            if (p == 8)
+            {
+                int a = i - 2;
+                i = i - 2;
+                printf("\b");
+                for (int z = a; z <= a;z++)
+                    printf(" ");
+                printf("\b");
+            }
+            i++;
+        }
+        printf("\n");
+        pass[i] = '\0'; 
         _flushall();
         admin_check();
         if (checkadmin == 1)
@@ -277,7 +297,7 @@ int kullanici_ekle()
         printf("Il : ");
         gets_s(users.address.il);
         _flushall();
-        printf("İlce : ");
+        printf("Ilce : ");
         gets_s(users.address.ilce);
         _flushall();
         printf("Cadde : ");
@@ -292,10 +312,10 @@ int kullanici_ekle()
         printf("Apartman : ");
         gets_s(users.address.apartman);
         _flushall();
-        printf("No : ");
+        printf("Kapı no : ");
         gets_s(users.address.no);
         _flushall();
-        fprintf(add_user, "%s\t%s\t%s\t%s\t%s\t%s\t%c\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", users.ad, users.soyad, users.tckimlik, users.telefon, users.eposta, id,
+        fprintf(add_user, "Ad=%s Soyad=%s TC.No=%s Telefon=%s E-Posta=%s Kullanici adi=%s Yetki Turu=%c Il=%s Ilce=%s Cadde=%s Mahalle=%s Sokak=%s Apartman=%s Kap, No=%s\n", users.ad, users.soyad, users.tckimlik, users.telefon, users.eposta, id,
             users.yetki_turu, users.address.il, users.address.ilce, users.address.cadde, users.address.mahalle, users.address.sokak, users.address.apartman, users.address.no);
         if (users.yetki_turu == 'a')
         {
@@ -426,9 +446,29 @@ void siginmaci_goruntule()
 {
     system("cls");
 }
-void bilgilerimi_goruntule()
-{
+void bilgilerimi_goruntule(){
     system("cls");
+    static const char filename[] = "user_information.dat";
+    FILE *file;
+    fopen_s(&file,filename, "r");
+    if (file != NULL)
+    {
+        char line[256]; /* or other suitable maximum line size */
+        while (fgets(line, sizeof line, file) != NULL) /* read a line */
+        {
+            if (strstr(line, id))
+            {
+                fputs(line, stdout); /* write the line */
+            }
+        }
+
+        fclose(file);
+    }
+
+    else
+    {
+        perror(filename); /* why didn't the file open? */
+    }
 }
 void sifre_degistir()
 {

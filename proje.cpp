@@ -318,7 +318,7 @@ void kullanici_ekle()
         }
     }
     fclose(add_user);
-    }
+}
 void kullanici_sil()
 {
     system("cls");
@@ -440,35 +440,17 @@ int admin_check(){
         for (j = strlen(words[i]) - 1; j >= 0 && (words[i][j] == '\n' || words[i][j] == '\r'); j--)
             words[i][j] = '\0';
     }
-    for (int k = 2; k <= 101; k = k + 2)
+    for (int c = 0; c <= i; c++)  {
+    if ((strcmp(id, words[c]) == 0 && strcmp(pass, words[c+1]) == 0))
     {
-        if ((strcmp(id, words[0]) == 0 && strcmp(pass, words[1]) == 0) && ((strcmp(id, words[0]) != EOF) && strcmp(pass, words[1]) != EOF))
-
+        printf("\t Basariyla giris yapildi");
+        for (int a = 1; a <= 5; a++)
         {
-            printf("\t Basariyla giris yapildi");
-            for (int a = 1; a <= 5; a++)
-            {
-                Sleep(1000);
-                printf(".");
-            }
-            checkadmin = 1;
-            break;
+            Sleep(1000);
+            printf(".");
         }
-        else if ((strcmp(id, words[k]) == 0 && strcmp(pass, words[k+1]) == 0) && ((strcmp(id, words[k]) != EOF) && strcmp(pass, words[k+1]) != EOF))
-        {
-            printf("\t Basariyla giris yapildi");
-            for (int a = 1; a <= 5; a++)
-            {
-                Sleep(1000);
-                printf(".");
-            }
-            checkadmin = 1;
-            break;
-        }
-        if (checkadmin == 1)
-            continue;
-        else
-            break;
+        checkadmin = 1;
+    }
     }
     fclose(admin_check);
     return 0;
@@ -506,10 +488,8 @@ int kullanici_check(){
         for (j = strlen(words[i]) - 1; j >= 0 && (words[i][j] == '\n' || words[i][j] == '\r'); j--)
             words[i][j] = '\0';
     }
-    for (int k = 2; k <= 101; k = k + 2)
-    {
-        if ((strcmp(id, words[0]) == 0 && strcmp(pass, words[1]) == 0) && ((strcmp(id, words[0]) != EOF) && strcmp(pass, words[1]) != EOF))
-
+    for (int c = 0; c <= i; c++)  {
+        if ((strcmp(id, words[c]) == 0 && strcmp(pass, words[c + 1]) == 0) && ((strcmp(id, words[c]) != EOF) && strcmp(pass, words[c + 1]) != EOF))
         {
             printf("\t Basariyla giris yapildi");
             for (int a = 1; a <= 5; a++)
@@ -518,23 +498,7 @@ int kullanici_check(){
                 printf(".");
             }
             checkkullanici = 1;
-            break;
         }
-        else if ((strcmp(id, words[k]) == 0 && strcmp(pass, words[k + 1]) == 0) && ((strcmp(id, words[k]) != EOF) && strcmp(pass, words[k + 1]) != EOF))
-        {
-            printf("\t Basariyla giris yapildi");
-            for (int a = 1; a <= 5; a++)
-            {
-                Sleep(1000);
-                printf(".");
-            }
-            checkkullanici = 1;
-            break;
-        }
-        if (checkkullanici == 1)
-            continue;
-        else
-            break;
     }
     fclose(kullanici_check);
     return 0;
@@ -572,10 +536,8 @@ int memur_check(){
         for (j = strlen(words[i]) - 1; j >= 0 && (words[i][j] == '\n' || words[i][j] == '\r'); j--)
             words[i][j] = '\0';
     }
-    for (int k = 2; k <= 101; k = k + 2)
-    {
-        if ((strcmp(id, words[0]) == 0 && strcmp(pass, words[1]) == 0) && ((strcmp(id, words[0]) != EOF) && strcmp(pass, words[1]) != EOF))
-
+    for (int c = 0; c <= i; c++)  {
+        if ((strcmp(id, words[c]) == 0 && strcmp(pass, words[c + 1]) == 0) && ((strcmp(id, words[c]) != EOF) && strcmp(pass, words[c + 1]) != EOF))
         {
             printf("\t Basariyla giris yapildi");
             for (int a = 1; a <= 5; a++)
@@ -584,23 +546,7 @@ int memur_check(){
                 printf(".");
             }
             checkmemur = 1;
-            break;
         }
-        else if ((strcmp(id, words[k]) == 0 && strcmp(pass, words[k + 1]) == 0) && ((strcmp(id, words[k]) != EOF) && strcmp(pass, words[k + 1]) != EOF))
-        {
-            printf("\t Basariyla giris yapildi");
-            for (int a = 1; a <= 5; a++)
-            {
-                Sleep(1000);
-                printf(".");
-            }
-            checkmemur = 1;
-            break;
-        }
-        if (checkmemur == 1)
-            continue;
-        else
-            break;
     }
     fclose(memur_check);
     return 0;

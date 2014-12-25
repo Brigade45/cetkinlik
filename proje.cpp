@@ -11,21 +11,20 @@
 char id[20];
 char pass[20];
 int checkadmin = 0, checkkullanici = 0, checkmemur = 0;
+int admin_id_check = 0, kullanici_id_check = 0, memur_id_check = 0;
 int secim;
 int login();
-void loginmenu();
 int admin();
 int memur();
 int kullanici();;
-void help();
 void adminmenu();
 void memurmenu();
 void kullanicimenu();
-void kullanici_ekle();
+int kullanici_ekle();
 void kullanici_sil();
 void kullanici_guncelle();
 void kullanici_ara();
-void siginmaci_ekle();
+int siginmaci_ekle();
 void siginmaci_sil();
 void siginmaci_guncelle();
 void siginmaci_ara();
@@ -33,7 +32,6 @@ void siginmaci_listele();
 void siginmaci_goruntule();
 void bilgilerimi_goruntule();
 void sifre_degistir();
-int dosya_olusturma();
 int default_check();
 int admin_check();
 int kullanici_check();
@@ -41,6 +39,10 @@ int memur_check();
 int first_memur();
 int first_kullanici();
 int user_information();
+int id_check_admin();
+int id_check_memur();
+int id_check_kullanici();
+int first_siginmaci();
 struct adres
 {
     char il[15];
@@ -63,26 +65,26 @@ struct kullanici{
     struct adres address;
 };
 struct siginmaci{
-    int siginmaci_no;
+    //int siginmaci_no;
     char ad[20];
     char soyad[20];
-    char dogum_tarihi;
+    char dogum_tarihi[4];
     char dogum_yeri[20];
-    char cinsiyet[1];
+    char cinsiyet;
     char uyruk[20];
     char meslek[20];
     char egitim_durumu[20];
     char telefon[20];
-    char yerlestirildigi_adres;
-    char geldigi_sehir;
-    char gelis_tarihi;
-    char eposta;
+    struct adres address;
+    char geldigi_sehir[20];
+    char gelis_tarihi[10];
+    char eposta[20];
 };
 int main()
 {
     system("color 90");
     default_check();       // tamamlandi
-    login();
+    login(); // tamamlandı
     _getch();
     return 0;
 }
@@ -110,8 +112,6 @@ int login()
         printf("3 saniye sonra tekrar kullanici adi ve sifre istenecektir.\n");
         Sleep(3000);
     } while (checkadmin != 1 && checkkullanici != 1 && checkmemur != 1);
-    //loginmenu();
-    //scanf_s("%d", &secim);
     _flushall();
     if (checkadmin == 1)
         admin();
@@ -119,56 +119,44 @@ int login()
         memur();
     else if (checkkullanici == 1)
         kullanici();
-    else if (secim == 4)
-        help();
     else if (secim == 0)
         exit(EXIT_SUCCESS);
     return 0;
 }
-void loginmenu()
-{
-    printf("\t\t  Siginmaci takip programina hosgeldiniz");
-    for (int a = 1; a <= 5; a++)
-    {
-        Sleep(1000);
-        printf(".");
-    }
-    printf("\n1 = Admin Girisi");
-    printf("\n2 = Memur Girisi");
-    printf("\n3 = Kullanici Girisi");
-    printf("\n4 = Yardim");
-    printf("\n0 = Cikis");
-    printf("\nSeciminiz = ");
-}
 int admin()
 {
-    adminmenu();
-    scanf_s("%d", &secim);
-    _flushall();
-    if (secim == 1)
-        kullanici_ekle();
-    else if (secim == 2)
-        kullanici_sil();
-    else if (secim == 3)
-        kullanici_guncelle();
-    else if (secim == 4)
-        kullanici_ara();
-    else if (secim == 5)
-        siginmaci_ekle();
-    else if (secim == 6)
-        siginmaci_sil();
-    else if (secim == 7)
-        siginmaci_guncelle();
-    else if (secim == 8)
-        siginmaci_ara();
-    else if (secim == 9)
-        siginmaci_listele();
-    else if (secim == 0)
-        exit(EXIT_SUCCESS);
+    do{
+        secim = 10;
+        adminmenu();
+        scanf_s("%d", &secim);
+        _flushall();
+        if (secim == 1)
+            kullanici_ekle();
+        else if (secim == 2)
+            kullanici_sil();
+        else if (secim == 3)
+            kullanici_guncelle();
+        else if (secim == 4)
+            kullanici_ara();
+        else if (secim == 5)
+            siginmaci_ekle();
+        else if (secim == 6)
+            siginmaci_sil();
+        else if (secim == 7)
+            siginmaci_guncelle();                                                       
+        else if (secim == 8)
+            siginmaci_ara();
+        else if (secim == 9)
+            siginmaci_listele();
+        else if (secim == 0)
+            exit(EXIT_SUCCESS);
+    } while (secim != 1 && secim != 2 && secim != 3 && secim != 4 && secim != 5 && secim != 6 && secim != 7 && secim != 8 && secim != 9 && secim != 0);
     return 0;
 }
 int memur()
 {
+    do{
+    secim = 10;
     memurmenu();
     scanf_s("%d", &secim);
     _flushall();
@@ -184,10 +172,13 @@ int memur()
         siginmaci_listele();
     else if (secim == 0)
         exit(EXIT_SUCCESS);
+    } while (secim !=1 && secim !=2 && secim !=3 && secim !=4 && secim !=5 && secim !=0);
     return 0;
 }
 int kullanici()
 {
+    do{
+    secim = 10;
     kullanicimenu();
     scanf_s("%d", &secim);
     _flushall();
@@ -199,6 +190,7 @@ int kullanici()
         sifre_degistir();
     else if (secim == 0)
         exit(EXIT_SUCCESS);
+    } while (secim != 1 && secim != 2 && secim != 3 && secim != 0);
     return 0;
 }
 void adminmenu()
@@ -214,6 +206,7 @@ void adminmenu()
     printf("\n8 = Siginmaci ara");
     printf("\n9 = Siginmacilari listele");
     printf("\n0 = Cikis");
+    printf("\nSeciminiz : ");
 }
 void memurmenu()
 {
@@ -224,6 +217,7 @@ void memurmenu()
     printf("\n4 = Siginmaci ara");
     printf("\n5 = Siginmacilari listele");
     printf("\n0 = Cikis");
+    printf("\nSeciminiz : ");
 }
 void kullanicimenu()
 {
@@ -232,12 +226,9 @@ void kullanicimenu()
     printf("\n2 = Bilgilerimi goruntule");
     printf("\n3 = Sifre degistir");
     printf("\n0 = Cikis");
+    printf("\nSeciminiz : ");
 }
-void help()
-{
-    system("cls");
-}
-void kullanici_ekle()
+int kullanici_ekle()
 {
     system("cls");
     first_memur();
@@ -267,9 +258,14 @@ void kullanici_ekle()
         printf("E-Posta giriniz : ");
         gets_s(users.eposta);
         _flushall();
-        printf("Kullanici adini giriniz : ");
-        gets_s(users.kullanici_adi);
+        do{
+        printf("\nKullanici adini giriniz : ");
+        gets_s(id);
         _flushall();
+        id_check_admin();
+        id_check_memur();
+        id_check_kullanici();
+        } while (admin_id_check == 1 || kullanici_id_check ==1 || memur_id_check ==1);
         printf("Sifrenizi giriniz : ");
         gets_s(users.sifre);
         _flushall();
@@ -299,25 +295,26 @@ void kullanici_ekle()
         printf("No : ");
         gets_s(users.address.no);
         _flushall();
-        fprintf(add_user, "%s\t%s\t%s\t%s\t%s\t%s\t%c\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", users.ad, users.soyad, users.tckimlik, users.telefon, users.eposta, users.kullanici_adi,
+        fprintf(add_user, "%s\t%s\t%s\t%s\t%s\t%s\t%c\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", users.ad, users.soyad, users.tckimlik, users.telefon, users.eposta, id,
             users.yetki_turu, users.address.il, users.address.ilce, users.address.cadde, users.address.mahalle, users.address.sokak, users.address.apartman, users.address.no);
         if (users.yetki_turu == 'a')
         {
             fopen_s(&add_user, "adminsifre.dat", "a");
-            fprintf(add_user, "\n%s\n%s", users.kullanici_adi, users.sifre);
+            fprintf(add_user, "\n%s\n%s", id, users.sifre);
         }
         else if (users.yetki_turu == 'm')
         {
             fopen_s(&add_user, "memursifre.dat", "a");
-            fprintf(add_user, "\n%s\n%s", users.kullanici_adi, users.sifre);
+            fprintf(add_user, "\n%s\n%s", id, users.sifre);
         }
         else if (users.yetki_turu == 'k')
         {
             fopen_s(&add_user, "kullanicisifre.dat", "a");
-            fprintf(add_user, "\n%s\n%s", users.kullanici_adi, users.sifre);
+            fprintf(add_user, "\n%s\n%s", id, users.sifre);
         }
     }
     fclose(add_user);
+    return 0;
 }
 void kullanici_sil()
 {
@@ -331,9 +328,83 @@ void kullanici_ara()
 {
     system("cls");
 }
-void siginmaci_ekle()
+int siginmaci_ekle()
 {
     system("cls");
+    first_siginmaci();;
+    Sleep(3000);
+    system("cls");
+    struct siginmaci users;
+    FILE *add_siginmaci;
+    fopen_s(&add_siginmaci, "siginmaci.dat", "ab");
+    if (add_siginmaci == NULL)
+        printf("siginmaci.dat acilamadi.");
+    else
+    {
+        printf("Isim giriniz : ");
+        gets_s(users.ad);
+        _flushall();
+        printf("Soyisim giriniz : ");
+        gets_s(users.soyad);
+        _flushall();
+        printf("Uyruk giriniz : ");
+        gets_s(users.uyruk);
+        _flushall();
+        printf("Telefon giriniz : ");
+        gets_s(users.telefon);
+        _flushall();
+        printf("E-Posta giriniz : ");
+        gets_s(users.eposta);
+        _flushall();
+        printf("Meslek giriniz : ");
+        gets_s(users.meslek);
+        _flushall();
+        printf("Dogum yeri giriniz : ");
+        gets_s(users.dogum_yeri);
+        _flushall();
+        printf("Dogum tarihi(Sadece yil) giriniz : ");
+        gets_s(users.dogum_tarihi);
+        _flushall(); 
+        printf("Egitim durumu giriniz : ");
+        gets_s(users.egitim_durumu);
+        _flushall();
+        printf("Geldigi sehri giriniz : ");
+        gets_s(users.geldigi_sehir);
+        _flushall();
+        printf("Gelis tarihini(01.01.2000 formatında) giriniz : ");
+        gets_s(users.gelis_tarihi);
+        _flushall();
+        do{
+            printf("Cinsiyet giriniz(Erkek = e, Kadin = k) : ");
+            users.cinsiyet = getchar();
+            _flushall();
+        } while (users.cinsiyet != 101 && users.cinsiyet != 107);
+        printf("Il : ");
+        gets_s(users.address.il);
+        _flushall();
+        printf("İlce : ");
+        gets_s(users.address.ilce);
+        _flushall();
+        printf("Cadde : ");
+        gets_s(users.address.cadde);
+        _flushall();
+        printf("Mahalle : ");
+        gets_s(users.address.mahalle);
+        _flushall();
+        printf("Sokak : ");
+        gets_s(users.address.sokak);
+        _flushall();
+        printf("Apartman : ");
+        gets_s(users.address.apartman);
+        _flushall();
+        printf("No : ");
+        gets_s(users.address.no);
+        _flushall();
+        fprintf(add_siginmaci, "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%c\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", users.ad, users.soyad, users.uyruk, users.telefon, users.eposta, users.meslek,
+        users.dogum_yeri ,users.dogum_tarihi,users.egitim_durumu,users.geldigi_sehir,users.gelis_tarihi,users.cinsiyet,users.address.il, users.address.ilce, users.address.cadde, users.address.mahalle, users.address.sokak, users.address.apartman, users.address.no);
+    }
+    fclose(add_siginmaci);
+    return 0;
 }
 void siginmaci_sil()
 {
@@ -362,30 +433,6 @@ void bilgilerimi_goruntule()
 void sifre_degistir()
 {
     system("cls");
-}
-int dosya_olusturma(){
-    FILE *admin;  /* dosya göstericisi */
-    fopen_s(&admin, "adminsifre.dat", "w");
-    if (admin == NULL)
-    {
-        puts("Dosya acilamiyor...");
-    }
-    fclose(admin);
-    FILE *kullanici;  /* dosya göstericisi */
-    fopen_s(&kullanici, "kullanicisifre.dat", "w");
-    if (kullanici == NULL)
-    {
-        puts("Dosya acilamiyor...");
-    }
-    fclose(kullanici);
-    FILE *memur;  /* dosya göstericisi */
-    fopen_s(&memur, "memursifre.dat", "w");
-    if (memur == NULL)
-    {
-        puts("Dosya acilamiyor...");
-    }
-    fclose(memur);
-    return 0;
 }
 int default_check()      // default_check tamamlandi.
 {
@@ -588,5 +635,162 @@ int user_information()
         fopen_s(&userinformation, "user_information.dat", "w");
     }
     fclose(userinformation);
+    return 0;
+}
+int id_check_admin(){
+    int lines_allocated = 1000;
+    int max_line_len = 150;
+    FILE *admin_check;
+    fopen_s(&admin_check, "adminsifre.dat", "r");
+    char **words = (char **)malloc(sizeof(char*)*lines_allocated);
+    int i;
+    for (i = 0; 1; i++)
+    {
+        int j;
+        if (i >= lines_allocated)
+        {
+            int new_size;
+            new_size = lines_allocated * 2;
+            words = (char **)realloc(words, sizeof(char*)*new_size);
+            if (words == NULL)
+            {
+                fprintf(stderr, "Out of memory.\n");
+                exit(3);
+            }
+            lines_allocated = new_size;
+        }
+        words[i] = (char*)malloc(max_line_len);
+        if (words[i] == NULL)
+        {
+            fprintf(stderr, "Out of memory (3).\n");
+            exit(4);
+        }
+        if (fgets(words[i], max_line_len - 1, admin_check) == NULL)
+            break;
+        for (j = strlen(words[i]) - 1; j >= 0 && (words[i][j] == '\n' || words[i][j] == '\r'); j--)
+            words[i][j] = '\0';
+    }
+    for (int c = 0; c <= i; c=c+2)  {
+        if ((strcmp(id, words[c]) == 0))
+        {
+            printf("\t Kullanici adi daha once alinmis");
+            for (int a = 1; a <= 5; a++)
+            {
+                Sleep(1000);
+                printf(".");
+            }
+            admin_id_check = 1;
+        }
+    }
+    fclose(admin_check);
+    return 0;
+}
+int id_check_kullanici(){
+    int lines_allocated = 1000;
+    int max_line_len = 150;
+    FILE *kullanici_check;
+    fopen_s(&kullanici_check, "kullanicisifre.dat", "r");
+    char **words = (char **)malloc(sizeof(char*)*lines_allocated);
+    int i;
+    for (i = 0; 1; i++)
+    {
+        int j;
+        if (i >= lines_allocated)
+        {
+            int new_size;
+            new_size = lines_allocated * 2;
+            words = (char **)realloc(words, sizeof(char*)*new_size);
+            if (words == NULL)
+            {
+                fprintf(stderr, "Out of memory.\n");
+                exit(3);
+            }
+            lines_allocated = new_size;
+        }
+        words[i] = (char*)malloc(max_line_len);
+        if (words[i] == NULL)
+        {
+            fprintf(stderr, "Out of memory (3).\n");
+            exit(4);
+        }
+        if (fgets(words[i], max_line_len - 1, kullanici_check) == NULL)
+            break;
+        for (j = strlen(words[i]) - 1; j >= 0 && (words[i][j] == '\n' || words[i][j] == '\r'); j--)
+            words[i][j] = '\0';
+    }
+    for (int c = 0; c <= i; c = c + 2)  {
+        if ((strcmp(id, words[c]) == 0))
+        {
+            printf("\t Kullanici adi daha once alinmis");
+            for (int a = 1; a <= 5; a++)
+            {
+                Sleep(1000);
+                printf(".");
+            }
+            kullanici_id_check = 1;
+        }
+    }
+    fclose(kullanici_check);
+    return 0;
+}
+int id_check_memur(){
+    int lines_allocated = 1000;
+    int max_line_len = 150;
+    FILE *memur_check;
+    fopen_s(&memur_check, "memursifre.dat", "r");
+    char **words = (char **)malloc(sizeof(char*)*lines_allocated);
+    int i;
+    for (i = 0; 1; i++)
+    {
+        int j;
+        if (i >= lines_allocated)
+        {
+            int new_size;
+            new_size = lines_allocated * 2;
+            words = (char **)realloc(words, sizeof(char*)*new_size);
+            if (words == NULL)
+            {
+                fprintf(stderr, "Out of memory.\n");
+                exit(3);
+            }
+            lines_allocated = new_size;
+        }
+        words[i] = (char*)malloc(max_line_len);
+        if (words[i] == NULL)
+        {
+            fprintf(stderr, "Out of memory (3).\n");
+            exit(4);
+        }
+        if (fgets(words[i], max_line_len - 1, memur_check) == NULL)
+            break;
+        for (j = strlen(words[i]) - 1; j >= 0 && (words[i][j] == '\n' || words[i][j] == '\r'); j--)
+            words[i][j] = '\0';
+    }
+    for (int c = 0; c <= i; c = c + 2)  {
+        if ((strcmp(id, words[c]) == 0))
+        {
+            printf("\t Kullanici adi daha once alinmis");
+            for (int a = 1; a <= 5; a++)
+            {
+                Sleep(1000);
+                printf(".");
+            }
+            memur_id_check = 1;
+        }
+    }
+    fclose(memur_check);
+    return 0;
+}
+int first_siginmaci()
+{
+    FILE *firstsiginmaci;  /* dosya göstericisi */
+    fopen_s(&firstsiginmaci, "siginmaci.dat", "r");
+    if (firstsiginmaci == NULL)
+    {
+        printf("Programda tanimli siginmaci.dat dosyasi bulunamadi.");
+        printf("\nDosya olusturuldu.");
+        fopen_s(&firstsiginmaci, "siginmaci.dat", "w");
+    }
+    fclose(firstsiginmaci);
     return 0;
 }

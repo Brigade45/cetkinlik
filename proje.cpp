@@ -1,16 +1,16 @@
-// siginmacilara otomatik olarak 1.2.3.
-// admin tüm yetkilere sahip
-// siginmaci memuru sadece siginmacilarla ilgili islemler
-// kullanici sadece goruntuleme
-// sifre yetki türü tutulacak
-// kullanıcı ile ilgili işlemleri sadece admin
-// her kullanıcı bilgilerini görüntüleyip , şifresini değiştirebilir
+/*
+Sifre degistirme eksik
+Guncelle eksik
+Sil eksik
+listele eksik
+*/
 #include <stdio.h>
 #include <conio.h>
 #include <Windows.h>
 char id[20];
 char pass[20];
-int checkadmin = 0, checkkullanici = 0, checkmemur = 0;
+char kontrol[50];
+int checkadmin = 0, checkkullanici = 0, checkmemur = 0,kontrolno=0;
 int admin_id_check = 0, kullanici_id_check = 0, memur_id_check = 0;
 int secim;
 int login();
@@ -23,13 +23,12 @@ void kullanicimenu();
 int kullanici_ekle();
 void kullanici_sil();
 void kullanici_guncelle();
-void kullanici_ara();
+int kullanici_ara();
 int siginmaci_ekle();
 void siginmaci_sil();
 void siginmaci_guncelle();
-void siginmaci_ara();
-void siginmaci_listele();
-void siginmaci_goruntule();
+int siginmaci_ara();
+int siginmaci_listele();        
 void bilgilerimi_goruntule();
 void sifre_degistir();
 int default_check();
@@ -43,6 +42,7 @@ int id_check_admin();
 int id_check_memur();
 int id_check_kullanici();
 int first_siginmaci();
+int kontrol_siginmacino();
 struct adres
 {
     char il[15];
@@ -79,7 +79,7 @@ struct siginmaci{
     char geldigi_sehir[20];
     char gelis_tarihi[11];
     char eposta[20];
-};
+}yedek[50];
 int main()
 {
     system("color 90");
@@ -203,7 +203,7 @@ int kullanici()
     scanf_s("%d", &secim);
     _flushall();
     if (secim == 1)
-        siginmaci_goruntule();
+        siginmaci_ara();
     else if (secim == 2)
         bilgilerimi_goruntule();
     else if (secim == 3)
@@ -344,9 +344,34 @@ void kullanici_guncelle()
 {
     system("cls");
 }
-void kullanici_ara()
+int kullanici_ara()
 {
     system("cls");
+    char ara[20];
+    printf("Arayacaginiz kelimeyi giriniz : ");
+    gets_s(ara);
+    static const char filename[] = "user_information.dat";
+    FILE *file;
+    fopen_s(&file, filename, "r");
+    if (file != NULL)
+    {
+        char line[256]; /* or other suitable maximum line size */
+        while (fgets(line, sizeof line, file) != NULL) /* read a line */
+        {
+            if (strstr(line, ara))
+            {
+                fputs(line, stdout); /* write the line */
+            }
+        }
+
+        fclose(file);
+    }
+
+    else
+    {
+        perror(filename); /* why didn't the file open? */
+    }
+    return 0;
 }
 int siginmaci_ekle()
 {
@@ -420,8 +445,84 @@ int siginmaci_ekle()
         printf("No : ");
         gets_s(users.address.no);
         _flushall();
-        fprintf(add_siginmaci, "%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%c\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", users.ad, users.soyad, users.uyruk, users.telefon, users.eposta, users.meslek,
-        users.dogum_yeri ,users.dogum_tarihi,users.egitim_durumu,users.geldigi_sehir,users.gelis_tarihi,users.cinsiyet,users.address.il, users.address.ilce, users.address.cadde, users.address.mahalle, users.address.sokak, users.address.apartman, users.address.no);
+        int a=0;
+        char kontrol[50];
+        char kontrol2[50];
+        int i = 0;
+        int z = 0; 
+        int c = 48;
+        FILE *siginmacisayi;
+
+        //fopen_s(&siginmacisayi, "siginmacisayi.dat", "w+");
+        fopen_s(&siginmacisayi, "siginmacisayi.dat", "r");
+        if (siginmacisayi == NULL)
+        {
+            printf("Programda tanimli siginmacisayi.dat dosyasi bulunamadi.");
+            printf("\nDosya olusturuldu.");
+            fopen_s(&siginmacisayi, "siginmacisayi.dat", "wb+");
+            fprintf(siginmacisayi, "%d", c+1);
+            fclose(siginmacisayi);
+        }        
+        else    {
+
+        fscanf_s(siginmacisayi, "%d",&c);
+        fclose(siginmacisayi);
+        c=c+1;
+        fopen_s(&siginmacisayi, "siginmacisayi.dat", "wb+");
+        fseek(siginmacisayi, 0, SEEK_SET);
+        fprintf(siginmacisayi, "%d", c);
+        fclose(siginmacisayi);
+        }
+        for (int a = c; a <= 99; a++)
+        {
+            if (a >= 49 && a <= 57)
+            {
+                kontrol[i] = a;                                                                                                                              
+                fprintf(add_siginmaci, "\n%c-Ad=%s\tSoyad=%s\tUyruk=%s\tTelefon=%s\tE-Posta=%s\tMeslek=%s\tDogum.yeri=%s\tDogum.tarihi=%s\tEgitim.durumu=%s\tGeldigi.sehir=%s\tGelis.tarihi%s\tCinsiyet=%c\tIl=%s\tIlce=%s\tCadde=%s\tMahalle=%s\tSokak=%s\tApartman=%s\tApt.No=%s\n", kontrol[i], users.ad, users.soyad, users.uyruk, users.telefon, users.eposta, users.meslek,
+                    users.dogum_yeri, users.dogum_tarihi, users.egitim_durumu, users.geldigi_sehir, users.gelis_tarihi, users.cinsiyet, users.address.il, users.address.ilce, users.address.cadde, users.address.mahalle, users.address.sokak, users.address.apartman, users.address.no);                break;
+            }
+            else if (a >= 58 && a <= 67)
+            {
+                kontrol[i] = 49;
+                kontrol2[z] = a - 10;
+                fprintf(add_siginmaci, "\n%c%c-Ad=%s\tSoyad=%s\tUyruk=%s\tTelefon=%s\tE-Posta=%s\tMeslek=%s\tDogum.yeri=%s\tDogum.tarihi=%s\tEgitim.durumu=%s\tGeldigi.sehir=%s\tGelis.tarihi%s\tCinsiyet=%c\tIl=%s\tIlce=%s\tCadde=%s\tMahalle=%s\tSokak=%s\tApartman=%s\tApt.No=%s\n", kontrol[i], kontrol2[z], users.ad, users.soyad, users.uyruk, users.telefon, users.eposta, users.meslek,
+                    users.dogum_yeri, users.dogum_tarihi, users.egitim_durumu, users.geldigi_sehir, users.gelis_tarihi, users.cinsiyet, users.address.il, users.address.ilce, users.address.cadde, users.address.mahalle, users.address.sokak, users.address.apartman, users.address.no);                break;
+            }
+            else if (a >= 68 && a <= 77)
+            {
+                kontrol[i] = 50;
+                kontrol2[z] = a - 20;
+                fprintf(add_siginmaci, "\n%c%c-Ad=%s\tSoyad=%s\tUyruk=%s\tTelefon=%s\tE-Posta=%s\tMeslek=%s\tDogum.yeri=%s\tDogum.tarihi=%s\tEgitim.durumu=%s\tGeldigi.sehir=%s\tGelis.tarihi%s\tCinsiyet=%c\tIl=%s\tIlce=%s\tCadde=%s\tMahalle=%s\tSokak=%s\tApartman=%s\tApt.No=%s\n", kontrol[i], kontrol2[z], users.ad, users.soyad, users.uyruk, users.telefon, users.eposta, users.meslek,
+                    users.dogum_yeri, users.dogum_tarihi, users.egitim_durumu, users.geldigi_sehir, users.gelis_tarihi, users.cinsiyet, users.address.il, users.address.ilce, users.address.cadde, users.address.mahalle, users.address.sokak, users.address.apartman, users.address.no);                break;
+            }
+            else if (a >= 78 && a <= 87)
+            {
+                kontrol[i] = 51;
+                kontrol2[z] = a - 30;
+                fprintf(add_siginmaci, "\n%c%c-Ad=%s\tSoyad=%s\tUyruk=%s\tTelefon=%s\tE-Posta=%s\tMeslek=%s\tDogum.yeri=%s\tDogum.tarihi=%s\tEgitim.durumu=%s\tGeldigi.sehir=%s\tGelis.tarihi%s\tCinsiyet=%c\tIl=%s\tIlce=%s\tCadde=%s\tMahalle=%s\tSokak=%s\tApartman=%s\tApt.No=%s\n", kontrol[i], kontrol2[z], users.ad, users.soyad, users.uyruk, users.telefon, users.eposta, users.meslek,
+                    users.dogum_yeri, users.dogum_tarihi, users.egitim_durumu, users.geldigi_sehir, users.gelis_tarihi, users.cinsiyet, users.address.il, users.address.ilce, users.address.cadde, users.address.mahalle, users.address.sokak, users.address.apartman, users.address.no);                break;
+            }
+            else if (a >= 88 && a <= 97)
+            {
+                kontrol[i] = 52;
+                kontrol2[z] = a - 40;
+                fprintf(add_siginmaci, "\%c%c-Ad=%s\tSoyad=%s\tUyruk=%s\tTelefon=%s\tE-Posta=%s\tMeslek=%s\tDogum.yeri=%s\tDogum.tarihi=%s\tEgitim.durumu=%s\tGeldigi.sehir=%s\tGelis.tarihi%s\tCinsiyet=%c\tIl=%s\tIlce=%s\tCadde=%s\tMahalle=%s\tSokak=%s\tApartman=%s\tApt.No=%s\n", kontrol[i], kontrol2[z], users.ad, users.soyad, users.uyruk, users.telefon, users.eposta, users.meslek,
+                    users.dogum_yeri, users.dogum_tarihi, users.egitim_durumu, users.geldigi_sehir, users.gelis_tarihi, users.cinsiyet, users.address.il, users.address.ilce, users.address.cadde, users.address.mahalle, users.address.sokak, users.address.apartman, users.address.no);
+                break;
+            }
+            else if (a >= 98 && a <= 99)
+            {
+                kontrol[i] = 53;
+                kontrol2[z] = a - 40;
+                fprintf(add_siginmaci, "\n%c%c-Ad=%s\tSoyad=%s\tUyruk=%s\tTelefon=%s\tE-Posta=%s\tMeslek=%s\tDogum.yeri=%s\tDogum.tarihi=%s\tEgitim.durumu=%s\tGeldigi.sehir=%s\tGelis.tarihi%s\tCinsiyet=%c\tIl=%s\tIlce=%s\tCadde=%s\tMahalle=%s\tSokak=%s\tApartman=%s\tApt.No=%s\n", kontrol[i], kontrol2[z], users.ad, users.soyad, users.uyruk, users.telefon, users.eposta, users.meslek,
+                    users.dogum_yeri, users.dogum_tarihi, users.egitim_durumu, users.geldigi_sehir, users.gelis_tarihi, users.cinsiyet, users.address.il, users.address.ilce, users.address.cadde, users.address.mahalle, users.address.sokak, users.address.apartman, users.address.no);
+                break;
+            }
+            i++;
+            z++;  
+        }
+        //fprintf(add_siginmaci, "Ad=%s Soyad=%s Uyruk=%s Telefon=%s E-Posta=%s Meslek=%s Dogum.yeri=%s Dogum.tarihi=%s Egitim.durumu=%s Geldigi.sehir=%s Gelis.tarihi=%s Cinsiyet=%c Il=%s Ilce=%s Cadde=%s Mahalle=%s Sokak=%s Apartman=%s Adres.no=%s\n",users.ad, users.soyad, users.uyruk, users.telefon, users.eposta, users.meslek,
+        //users.dogum_yeri ,users.dogum_tarihi,users.egitim_durumu,users.geldigi_sehir,users.geliadmins_tarihi,users.cinsiyet,users.address.il, users.address.ilce, users.address.cadde, users.address.mahalle, users.address.sokak, users.address.apartman, users.address.no);
     }
     fclose(add_siginmaci);
     return 0;
@@ -434,17 +535,60 @@ void siginmaci_guncelle()
 {
     system("cls");
 }
-void siginmaci_ara()
+int siginmaci_ara()
 {
     system("cls");
+    char ara[20];
+    printf("Arayacaginiz kelimeyi giriniz : ");
+    gets_s(ara);
+    static const char filename[] = "siginmaci.dat";
+    FILE *file;
+    fopen_s(&file, filename, "r");
+    if (file != NULL)
+    {
+        char line[256]; /* or other suitable maximum line size */
+        while (fgets(line, sizeof line, file) != NULL) /* read a line */
+        {
+            if (strstr(line, ara))
+            {
+                fputs(line, stdout); /* write the line */
+            }
+        }
+
+        fclose(file);
+    }
+
+    else
+    {
+        perror(filename); /* why didn't the file open? */
+    }
+    return 0;
 }
-void siginmaci_listele()
+int siginmaci_listele()
 {
     system("cls");
-}
-void siginmaci_goruntule()
-{
-    system("cls");
+    static const char filename[] = "siginmaci.dat";
+    FILE *file;
+    fopen_s(&file, filename, "r");
+    if (file != NULL)
+    {
+        char line[256]; /* or other suitable maximum line size */
+        while (fgets(line, sizeof line, file) != NULL) /* read a line */
+        {
+            if (strstr(line, "Ad="))
+            {
+                fputs(line, stdout); /* write the line */
+            }
+        }
+
+        fclose(file);
+    }
+
+    else
+    {
+        perror(filename); /* why didn't the file open? */
+    }
+    return 0;
 }
 void bilgilerimi_goruntule(){
     system("cls");
@@ -821,16 +965,64 @@ int id_check_memur(){
     fclose(memur_check);
     return 0;
 }
-int first_siginmaci()
+int first_siginmaci()   
 {
     FILE *firstsiginmaci;  /* dosya göstericisi */
-    fopen_s(&firstsiginmaci, "siginmaci.dat", "r");
+    fopen_s(&firstsiginmaci, "siginmaci.dat", "rb");
     if (firstsiginmaci == NULL)
     {
         printf("Programda tanimli siginmaci.dat dosyasi bulunamadi.");
         printf("\nDosya olusturuldu.");
-        fopen_s(&firstsiginmaci, "siginmaci.dat", "w");
+        fopen_s(&firstsiginmaci, "siginmaci.dat", "wb");
     }
     fclose(firstsiginmaci);
     return 0;
 }
+int kontrol_siginmacino(){
+    int lines_allocated = 1000;
+    int max_line_len = 150;
+    FILE *siginmaci_no;
+    fopen_s(&siginmaci_no, "siginmacisayi.dat", "r");
+    char **words = (char **)malloc(sizeof(char*)*lines_allocated);
+    int i;
+    for (i = 0; 1; i++)
+    {
+        int j;
+        if (i >= lines_allocated)
+        {
+            int new_size;
+            new_size = lines_allocated * 2;
+            words = (char **)realloc(words, sizeof(char*)*new_size);
+            if (words == NULL)
+            {
+                fprintf(stderr, "Out of memory.\n");
+                exit(3);
+            }
+            lines_allocated = new_size;
+        }
+        words[i] = (char*)malloc(max_line_len);
+        if (words[i] == NULL)
+        {
+            fprintf(stderr, "Out of memory (3).\n");
+            exit(4);
+        }
+        if (fgets(words[i], max_line_len - 1, siginmaci_no) == NULL)
+            break;
+        for (j = strlen(words[i]) - 1; j >= 0 && (words[i][j] == '\n' || words[i][j] == '\r'); j--)
+            words[i][j] = '\0';
+    }
+    for (int c = 0; c <= i; c = c + 1)  {
+        if ((strcmp(kontrol, words[c]) == 0))
+        {
+            printf("\t Kullanici adi daha once alinmis");
+            for (int a = 1; a <= 5; a++)
+            {
+                Sleep(1000);
+                printf(".");
+            }
+            kontrolno = 1;
+        }
+    }
+    fclose(siginmaci_no);
+    return 0;
+}                       

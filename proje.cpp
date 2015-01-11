@@ -1,8 +1,12 @@
 /*
+1353056
+Tugay ŞENGEL
+Dönem Proje
+---------------
 Sifre degistirme eksik
 Guncelle eksik
 Sil eksik
-listele eksik
+listele eksik(tek koşul)
 */
 #include <stdio.h>
 #include <conio.h>
@@ -355,12 +359,12 @@ int kullanici_ara()
     fopen_s(&file, filename, "r");
     if (file != NULL)
     {
-        char line[256]; /* or other suitable maximum line size */
-        while (fgets(line, sizeof line, file) != NULL) /* read a line */
+        char line[256]; 
+        while (fgets(line, sizeof line, file) != NULL) 
         {
             if (strstr(line, ara))
             {
-                fputs(line, stdout); /* write the line */
+                fputs(line, stdout); 
             }
         }
 
@@ -369,7 +373,7 @@ int kullanici_ara()
 
     else
     {
-        perror(filename); /* why didn't the file open? */
+        perror(filename); 
     }
     return 0;
 }
@@ -546,12 +550,12 @@ int siginmaci_ara()
     fopen_s(&file, filename, "r");
     if (file != NULL)
     {
-        char line[256]; /* or other suitable maximum line size */
-        while (fgets(line, sizeof line, file) != NULL) /* read a line */
+        char line[256]; 
+        while (fgets(line, sizeof line, file) != NULL) 
         {
             if (strstr(line, ara))
             {
-                fputs(line, stdout); /* write the line */
+                fputs(line, stdout); 
             }
         }
 
@@ -560,7 +564,7 @@ int siginmaci_ara()
 
     else
     {
-        perror(filename); /* why didn't the file open? */
+        perror(filename); 
     }
     return 0;
 }
@@ -572,12 +576,12 @@ int siginmaci_listele()
     fopen_s(&file, filename, "r");
     if (file != NULL)
     {
-        char line[256]; /* or other suitable maximum line size */
-        while (fgets(line, sizeof line, file) != NULL) /* read a line */
+        char line[256]; 
+        while (fgets(line, sizeof line, file) != NULL) 
         {
             if (strstr(line, "Ad="))
             {
-                fputs(line, stdout); /* write the line */
+                fputs(line, stdout); 
             }
         }
 
@@ -586,7 +590,7 @@ int siginmaci_listele()
 
     else
     {
-        perror(filename); /* why didn't the file open? */
+        perror(filename); 
     }
     return 0;
 }
@@ -597,12 +601,12 @@ void bilgilerimi_goruntule(){
     fopen_s(&file,filename, "r");
     if (file != NULL)
     {
-        char line[256]; /* or other suitable maximum line size */
-        while (fgets(line, sizeof line, file) != NULL) /* read a line */
+        char line[256]; 
+        while (fgets(line, sizeof line, file) != NULL) 
         {
             if (strstr(line, id))
             {
-                fputs(line, stdout); /* write the line */
+                fputs(line, stdout);
             }
         }
 
@@ -611,7 +615,7 @@ void bilgilerimi_goruntule(){
 
     else
     {
-        perror(filename); /* why didn't the file open? */
+        perror(filename); 
     }
 }
 void sifre_degistir()
